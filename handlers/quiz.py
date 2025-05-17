@@ -6,6 +6,7 @@ from database.db import get_db
 from keyboards import main_menu
 from sqlalchemy import func
 
+
 router = Router()
 
 waiting_for_answer = {}
@@ -30,6 +31,7 @@ async def get_progress_stats(user_id: int):
 @router.message(Command("quiz"))
 @router.message(F.text == "❓ Квиз")
 async def start_learning(message: types.Message, bot: Bot):
+
     word = await get_random_word(message.from_user.id)
 
     if not word:
@@ -55,6 +57,7 @@ async def start_learning(message: types.Message, bot: Bot):
 
 @router.message(F.text == "📊 Прогресс")
 async def show_progress(message: types.Message):
+
     total, learned = await get_progress_stats(message.from_user.id)
     progress_percent = (learned / total * 100) if total > 0 else 0
 
@@ -72,6 +75,7 @@ async def show_progress(message: types.Message):
 
 @router.message(F.text == "Показать перевод")
 async def show_translation(message: types.Message):
+
     if message.from_user.id not in waiting_for_answer:
         return
     word = waiting_for_answer[message.from_user.id]
@@ -80,11 +84,13 @@ async def show_translation(message: types.Message):
 
 @router.message(F.text == "Следующее слово")
 async def next_word(message: types.Message, bot: Bot):
+
     await start_learning(message, bot)
 
 
 @router.message(F.text == "Подсказка")
 async def give_hint(message: types.Message):
+
     if message.from_user.id not in waiting_for_answer:
         return
 
@@ -95,6 +101,7 @@ async def give_hint(message: types.Message):
 
 @router.message(F.text.casefold() == "назад в меню")
 async def back_to_menu(message: types.Message):
+
     if message.from_user.id in waiting_for_answer:
         del waiting_for_answer[message.from_user.id]
 
@@ -113,6 +120,7 @@ async def back_to_menu(message: types.Message):
 
 @router.message(F.text)
 async def check_answer(message: types.Message, bot: Bot):
+
     if message.from_user.id not in waiting_for_answer:
         return
 
@@ -140,6 +148,7 @@ async def check_answer(message: types.Message, bot: Bot):
             reply_markup=types.ReplyKeyboardRemove()
         )
     else:
+
         await message.answer(
             f"❌ Неправильно. Правильный ответ: <b>{word.russian}</b>",
             parse_mode="HTML"

@@ -4,6 +4,7 @@ from database.models import UserProgress
 
 
 def fix_null_progress():
+
     db = next(get_db())
     try:
 
@@ -20,9 +21,11 @@ def fix_null_progress():
 
         db.commit()
         return updated
+
     except Exception as e:
         db.rollback()
         print(e)
         raise
+
     finally:
         db.close()

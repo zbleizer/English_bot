@@ -2,7 +2,9 @@ from database.db import engine, get_db
 from database.models import Base, Word
 import json
 
+
 def init_database():
+
     Base.metadata.create_all(bind=engine)
 
     with open("database/words.json", "r", encoding="utf-8") as f:
@@ -18,9 +20,11 @@ def init_database():
                 ))
         db.commit()
         print("База успешно инициализирована!")
+
     except Exception as e:
         db.rollback()
         print(f"Ошибка: {e}")
+
     finally:
         db.close()
 
